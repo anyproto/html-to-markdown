@@ -23,7 +23,7 @@ var replacer = strings.NewReplacer(
 
 func Markdown(text string) string {
 	// Escape backslash escapes!
-	text = backslash.ReplaceAllString(text, `\\$1`)
+/*	text = backslash.ReplaceAllString(text, `\\$1`)
 
 	// Escape headings
 	text = heading.ReplaceAllString(text, `\$1`)
@@ -53,7 +53,7 @@ func Markdown(text string) string {
 	// Escape em/strong _
 	// Escape code _
 	text = replacer.Replace(text)
-
+*/
 	// Escape link brackets
 	//text = link.ReplaceAllString(text, `\$&`)
 
