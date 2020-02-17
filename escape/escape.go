@@ -55,7 +55,7 @@ func Markdown(text string) string {
 	text = replacer.Replace(text)
 
 	// Escape link brackets
-	text = link.ReplaceAllString(text, `\$&`)
+	//text = link.ReplaceAllString(text, `\$&`)
 
 	return text
 }
