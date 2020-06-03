@@ -418,6 +418,18 @@ func Fprint(w io.Writer, a ...interface{}) (n int, err error) {</pre></div>
 			name: "dont escape too much",
 			html: `jmap –histo[:live]`,
 		},
+		{
+			name: "nested lists",
+			html: `<ul>
+  <li>Coffee</li>
+  <li>Tea<ul>
+      <li>Black tea</li>
+      <li>Green tea</li>
+    </ul>
+  </li>
+  <li>Milk</li>
+</ul><h1>header1</h1>`,
+		},
 		/*
 					{ // TODO: not working yet
 						name: "p tag with lots of whitespace",

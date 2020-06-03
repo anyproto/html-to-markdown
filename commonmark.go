@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"unicode"
 
 	"github.com/JohannesKaufmann/html-to-markdown/escape"
 	"github.com/PuerkitoBio/goquery"
@@ -17,8 +18,22 @@ var commonmark = []Rule{
 		Filter: []string{"ul", "ol"},
 		Replacement: func(content string, selec *goquery.Selection, opt *Options) *string {
 			parent := selec.Parent()
+			lastContentTextNode := strings.TrimRight(parent.Nodes[0].FirstChild.Data, " \t")
+			parent.Nodes[0].FirstChild.Data = lastContentTextNode
+
 			if parent.Is("li") && parent.Children().Last().IsSelection(selec) {
-				// content = "\n" + content
+				lastContentTextNode := strings.TrimRight(parent.Nodes[0].FirstChild.Data, " \t")
+				if !strings.HasSuffix(lastContentTextNode, "\n") {
+					// add a line break prefix if the parent's text node doesn't have it
+					content = "\n" + content
+				}
+
+				// remove
+				trimmedSpaceContent := strings.TrimRight(content, " \t")
+				if strings.HasSuffix(trimmedSpaceContent, "\n") {
+					content = strings.TrimRightFunc(content, unicode.IsSpace)
+				}
+
 				// panic("ul&li -> parent is li & something")
 			} else {
 				content = "\n\n" + content + "\n\n"
