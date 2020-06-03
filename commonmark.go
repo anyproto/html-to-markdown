@@ -84,7 +84,7 @@ var commonmark = []Rule{
 		},
 	},
 	Rule{
-		Filter: []string{"p"},
+		Filter: []string{"p", "div"},
 		Replacement: func(content string, selec *goquery.Selection, opt *Options) *string {
 			parent := goquery.NodeName(selec.Parent())
 			if IsInlineElement(parent) || parent == "li" {
