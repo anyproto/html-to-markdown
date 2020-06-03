@@ -127,6 +127,10 @@ type Options struct {
 	// disables markdown escaping inside text nodes
 	// default: false
 	DisableEscaping bool
+
+	// allow block elements nested in the header to break it out
+	// default: false
+	AllowHeaderBreak bool
 }
 
 type AdvancedResult struct {

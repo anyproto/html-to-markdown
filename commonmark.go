@@ -92,6 +92,7 @@ var commonmark = []Rule{
 				return &content
 			}
 
+			content = strings.TrimSpace(content)
 			content = "\n\n" + content + "\n\n"
 			return &content
 		},
@@ -117,8 +118,11 @@ var commonmark = []Rule{
 			}
 
 			prefix := strings.Repeat("#", level)
-			content = strings.Replace(content, "\n", " ", -1)
+			if !opt.AllowHeaderBreak {
+				content = strings.Replace(content, "\n", " ", -1)
+			}
 			content = strings.Replace(content, "\r", " ", -1)
+			content = strings.TrimSpace(content)
 			text := "\n\n" + prefix + " " + content + "\n\n"
 			return &text
 		},
