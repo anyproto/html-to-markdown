@@ -123,6 +123,10 @@ type Options struct {
 	// full, collapsed, or shortcut
 	// default: full
 	LinkReferenceStyle string
+
+	// disables markdown escaping inside text nodes
+	// default: false
+	DisableEscaping bool
 }
 
 type AdvancedResult struct {
