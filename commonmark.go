@@ -130,22 +130,38 @@ var commonmark = []Rule{
 	Rule{
 		Filter: []string{"strong", "b"},
 		Replacement: func(content string, selec *goquery.Selection, opt *Options) *string {
-			trimmed := strings.TrimSpace(content)
-			if trimmed == "" {
+			rightTrimmed := strings.TrimRightFunc(content, func(r rune) bool { return unicode.IsPunct(r) || unicode.IsSpace(r) })
+			rightExtra := content[len(rightTrimmed):]
+
+			trimmed := strings.TrimLeftFunc(rightTrimmed, func(r rune) bool { return unicode.IsPunct(r) || unicode.IsSpace(r) })
+			leftExtra := content[0 : len(rightTrimmed)-len(trimmed)]
+
+			if strings.TrimSpace(trimmed) == "" {
+				trimmed = leftExtra + rightExtra
 				return &trimmed
 			}
-			trimmed = opt.StrongDelimiter + trimmed + opt.StrongDelimiter
+
+			trimmed = leftExtra + opt.StrongDelimiter + trimmed + opt.StrongDelimiter + rightExtra
+
 			return &trimmed
 		},
 	},
 	Rule{
 		Filter: []string{"i", "em"},
 		Replacement: func(content string, selec *goquery.Selection, opt *Options) *string {
-			trimmed := strings.TrimSpace(content)
-			if trimmed == "" {
+			rightTrimmed := strings.TrimRightFunc(content, func(r rune) bool { return unicode.IsPunct(r) || unicode.IsSpace(r) })
+			rightExtra := content[len(rightTrimmed):]
+
+			trimmed := strings.TrimLeftFunc(rightTrimmed, func(r rune) bool { return unicode.IsPunct(r) || unicode.IsSpace(r) })
+			leftExtra := content[0 : len(rightTrimmed)-len(trimmed)]
+
+			if strings.TrimSpace(trimmed) == "" {
+				trimmed = leftExtra + rightExtra
 				return &trimmed
 			}
-			trimmed = opt.EmDelimiter + trimmed + opt.EmDelimiter
+
+			trimmed = leftExtra + opt.EmDelimiter + trimmed + opt.EmDelimiter + rightExtra
+
 			return &trimmed
 		},
 	},
