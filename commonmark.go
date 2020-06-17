@@ -264,10 +264,29 @@ var commonmark = []Rule{
 			content = strings.TrimSpace(content)
 			content = multipleNewLinesRegex.ReplaceAllString(content, "\n\n")
 
-			var beginningR = regexp.MustCompile(`(?m)^`)
-			content = beginningR.ReplaceAllString(content, "> ")
+			text := "\n\n" + content + "\n\n"
+			return &text
+		},
+	},
+
+	Rule{
+		Filter: []string{"td"},
+		Replacement: func(content string, selec *goquery.Selection, opt *Options) *string {
+			content = strings.TrimSpace(content)
+			content = multipleNewLinesRegex.ReplaceAllString(content, "\n\n")
 
 			text := "\n\n" + content + "\n\n"
+			return &text
+		},
+	},
+
+	Rule{
+		Filter: []string{"th"},
+		Replacement: func(content string, selec *goquery.Selection, opt *Options) *string {
+			content = strings.TrimSpace(content)
+			content = multipleNewLinesRegex.ReplaceAllString(content, "\n\n")
+
+			text := "\n\n**" + content + "**\n\n"
 			return &text
 		},
 	},
