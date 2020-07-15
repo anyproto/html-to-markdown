@@ -131,6 +131,8 @@ type Options struct {
 	// allow block elements nested in the header to break it out
 	// default: false
 	AllowHeaderBreak bool
+
+	domain string
 }
 
 type AdvancedResult struct {
