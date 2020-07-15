@@ -133,6 +133,7 @@ var commonmark = []Rule{
 			}
 
 			prefix := strings.Repeat("#", level)
+			content = strings.TrimSpace(content)
 			text := "\n\n" + prefix + " " + content + "\n\n"
 			return &text
 		},
