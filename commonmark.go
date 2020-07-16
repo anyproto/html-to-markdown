@@ -97,7 +97,9 @@ var commonmark = []Rule{
 				return &content
 			}
 
-			content = strings.TrimSpace(content)
+			// remove unnecessary spaces to have clean markdown
+			content = TrimpLeadingSpaces(content)
+
 			content = "\n\n" + content + "\n\n"
 			return &content
 		},
