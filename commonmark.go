@@ -215,8 +215,7 @@ var commonmark = []Rule{
 			}
 
 			// having multiline content inside a link is a bit tricky
-			content = strings.TrimSpace(content)
-			content = strings.Replace(content, "\n", `\`+"\n", -1)
+			content = EscapeMultiLine(content)
 
 			var title string
 			if t, ok := selec.Attr("title"); ok {
@@ -227,6 +226,11 @@ var commonmark = []Rule{
 			// the 'title' or 'aria-label' attribute is used instead.
 			if strings.TrimSpace(content) == "" {
 				content = selec.AttrOr("title", selec.AttrOr("aria-label", ""))
+			}
+
+			// a link without text won't de displayed anyway
+			if content == "" {
+				return AdvancedResult{}, true
 			}
 
 			if opt.LinkStyle == "inlined" {
