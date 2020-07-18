@@ -663,6 +663,18 @@ func Fprint(w io.Writer, a ...interface{}) (n int, err error) {</pre></div>
 			html: `jmap –histo[:live]`,
 		},
 		{
+			name: "html in noscript",
+			html: `
+<noscript>
+	<img src="https://example.cm/funny.gif">
+</noscript>
+			`,
+		},
+		{
+			name: "remove iframe",
+			html: ` <iframe src="https://www.w3schools.com" title="W3Schools Free Online Web Tutorials"></iframe> `,
+		},
+		{
 			name: "nested lists",
 			html: `<ul>
   <li>Coffee</li>

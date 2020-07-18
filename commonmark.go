@@ -317,26 +317,13 @@ var commonmark = []Rule{
 			return &text
 		},
 	},
-
 	Rule{
-		Filter: []string{"td"},
+		Filter: []string{"noscript"},
 		Replacement: func(content string, selec *goquery.Selection, opt *Options) *string {
-			content = strings.TrimSpace(content)
-			content = multipleNewLinesRegex.ReplaceAllString(content, "\n\n")
-
-			text := "\n\n" + content + "\n\n"
-			return &text
-		},
-	},
-
-	Rule{
-		Filter: []string{"th"},
-		Replacement: func(content string, selec *goquery.Selection, opt *Options) *string {
-			content = strings.TrimSpace(content)
-			content = multipleNewLinesRegex.ReplaceAllString(content, "\n\n")
-
-			text := "\n\n**" + content + "**\n\n"
-			return &text
+			// for now remove the contents of noscript. But in the future we could
+			// tell goquery to parse the contents of the tag.
+			// -> https://github.com/PuerkitoBio/goquery/issues/139#issuecomment-517526070
+			return nil
 		},
 	},
 }
