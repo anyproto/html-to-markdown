@@ -239,8 +239,11 @@ var commonmark = []Rule{
 			}
 
 			if opt.LinkStyle == "inlined" {
+				md := fmt.Sprintf("[%s](%s%s)", content, href, title)
+				md = AddSpaceIfNessesary(selec, md)
+
 				return AdvancedResult{
-					Markdown: fmt.Sprintf("[%s](%s%s)", content, href, title),
+					Markdown: md,
 				}, false
 			}
 
@@ -261,6 +264,8 @@ var commonmark = []Rule{
 				replacement = "[" + content + "][" + id + "]"
 				reference = "[" + id + "]: " + href + title
 			}
+
+			replacement = AddSpaceIfNessesary(selec, replacement)
 			return AdvancedResult{Markdown: replacement, Footer: reference}, false
 		},
 	},
