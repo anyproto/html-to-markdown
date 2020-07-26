@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 	"unicode"
+	"unicode"
 
 	"github.com/JohannesKaufmann/html-to-markdown/escape"
 	"github.com/PuerkitoBio/goquery"
