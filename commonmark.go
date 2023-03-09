@@ -92,7 +92,6 @@ var commonmark = []Rule{
 			if !opt.DisableEscaping {
 				text = escape.MarkdownCharacters(text)
 			}
-
 			// if its inside a list, trim the spaces to not mess up the indentation
 			parent := selec.Parent()
 			next := selec.Next()
@@ -158,6 +157,11 @@ var commonmark = []Rule{
 			}
 
 			prefix := strings.Repeat("#", level)
+			if !opt.AllowHeaderBreak {
+				content = strings.Replace(content, "\n", " ", -1)
+			}
+			content = strings.Replace(content, "\r", " ", -1)
+			content = strings.TrimSpace(content)
 			text := "\n\n" + prefix + " " + content + "\n\n"
 			return &text
 		},
