@@ -23,7 +23,7 @@ var commonmark = []Rule{
 			lastContentTextNode := strings.TrimRight(parent.Nodes[0].FirstChild.Data, " \t")
 			parent.Nodes[0].FirstChild.Data = lastContentTextNode
 
-			if (parent.Is("li") || parent.Is("ul") || parent.Is("ol")) && parent.Children().Last().IsSelection(selec) {
+			if parent.Is("li") && parent.Children().Last().IsSelection(selec) {
 				lastContentTextNode := strings.TrimRight(parent.Nodes[0].FirstChild.Data, " \t")
 				if !strings.HasSuffix(lastContentTextNode, "\n") {
 					// add a line break prefix if the parent's text node doesn't have it
@@ -128,10 +128,12 @@ var commonmark = []Rule{
 				return nil
 			}
 
-			content = strings.Replace(content, "\n", " ", -1)
-			content = strings.Replace(content, "\r", " ", -1)
-			content = strings.Replace(content, `#`, `\#`, -1)
-			content = strings.TrimSpace(content)
+			if !opt.AllowHeaderBreak {
+				content = strings.Replace(content, "\n", " ", -1)
+				content = strings.Replace(content, "\r", " ", -1)
+				content = strings.Replace(content, `#`, `\#`, -1)
+				content = strings.TrimSpace(content)
+			}
 
 			insideLink := selec.ParentsFiltered("a").Length() > 0
 			if insideLink {
@@ -157,9 +159,6 @@ var commonmark = []Rule{
 			}
 
 			prefix := strings.Repeat("#", level)
-			if !opt.AllowHeaderBreak {
-				content = strings.Replace(content, "\n", " ", -1)
-			}
 			content = strings.Replace(content, "\r", " ", -1)
 			content = strings.TrimSpace(content)
 			text := "\n\n" + prefix + " " + content + "\n\n"
@@ -250,11 +249,6 @@ var commonmark = []Rule{
 			// the 'title' or 'aria-label' attribute is used instead.
 			if strings.TrimSpace(content) == "" {
 				content = selec.AttrOr("title", selec.AttrOr("aria-label", ""))
-			}
-
-			// a link without text won't de displayed anyway
-			if content == "" {
-				return AdvancedResult{}, true
 			}
 
 			if opt.LinkStyle == "inlined" {
