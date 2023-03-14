@@ -99,14 +99,6 @@ type Options struct {
 	// default: false
 	AllowHeaderBreak bool
 
-	// disables markdown escaping inside text nodes
-	// default: false
-	DisableEscaping bool
-
-	// allow block elements nested in the header to break it out
-	// default: false
-	AllowHeaderBreak bool
-
 	domain string
 
 	// GetAbsoluteURL parses the `rawURL` and adds the `domain` to convert relative (/page.html)

@@ -2,12 +2,12 @@ package md
 
 import (
 	"fmt"
-	"unicode"
 
 	"regexp"
 	"strconv"
 	"strings"
 	"unicode"
+	"unicode/utf8"
 
 	"github.com/JohannesKaufmann/html-to-markdown/escape"
 	"github.com/PuerkitoBio/goquery"
