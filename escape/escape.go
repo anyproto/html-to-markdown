@@ -59,7 +59,7 @@ func MarkdownCharacters(text string) string {
 	text = replacer.Replace(text)
 
 	// Escape link & image brackets
-	text = link.ReplaceAllString(text, `\$1`)
+	//text = link.ReplaceAllString(text, `\$1`)
 
 	return text
 }

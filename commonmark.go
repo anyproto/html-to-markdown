@@ -2,8 +2,6 @@ package md
 
 import (
 	"fmt"
-
-
 	"regexp"
 	"strconv"
 	"strings"
@@ -214,11 +212,6 @@ var commonmark = []Rule{
 			if src == "" {
 				return String("")
 			}
-
-			src = opt.GetAbsoluteURL(selec, src, opt.domain)
-
-			alt := selec.AttrOr("alt", "")
-			alt = strings.Replace(alt, "\n", " ", -1)
 
 			src = opt.GetAbsoluteURL(selec, src, opt.domain)
 
