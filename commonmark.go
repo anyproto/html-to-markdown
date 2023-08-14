@@ -3,6 +3,7 @@ package md
 import (
 	"fmt"
 
+
 	"regexp"
 	"strconv"
 	"strings"
@@ -20,23 +21,22 @@ var commonmark = []Rule{
 		Filter: []string{"ul", "ol"},
 		Replacement: func(content string, selec *goquery.Selection, opt *Options) *string {
 			parent := selec.Parent()
-			lastContentTextNode := strings.TrimRight(parent.Nodes[0].FirstChild.Data, " \t")
-			parent.Nodes[0].FirstChild.Data = lastContentTextNode
 
-			if parent.Is("li") && parent.Children().Last().IsSelection(selec) {
+			// we have a nested list, were the ul/ol is inside a list item
+			// -> based on work done by @requilence from @anytypeio
+			if (parent.Is("li") || parent.Is("ul") || parent.Is("ol")) && parent.Children().Last().IsSelection(selec) {
+				// add a line break prefix if the parent's text node doesn't have it.
+				// that makes sure that every list item is on its on line
 				lastContentTextNode := strings.TrimRight(parent.Nodes[0].FirstChild.Data, " \t")
 				if !strings.HasSuffix(lastContentTextNode, "\n") {
-					// add a line break prefix if the parent's text node doesn't have it
 					content = "\n" + content
 				}
 
-				// remove
+				// remove empty lines between lists
 				trimmedSpaceContent := strings.TrimRight(content, " \t")
 				if strings.HasSuffix(trimmedSpaceContent, "\n") {
 					content = strings.TrimRightFunc(content, unicode.IsSpace)
 				}
-
-				// panic("ul&li -> parent is li & something")
 			} else {
 				content = "\n\n" + content + "\n\n"
 			}
@@ -89,9 +89,14 @@ var commonmark = []Rule{
 			// normal text be indented and thus be a code block.
 			text = multipleSpacesR.ReplaceAllString(text, " ")
 
+			if opt.EscapeMode == "basic" {
+				text = escape.MarkdownCharacters(text)
+			}
+
 			if !opt.DisableEscaping {
 				text = escape.MarkdownCharacters(text)
 			}
+
 			// if its inside a list, trim the spaces to not mess up the indentation
 			parent := selec.Parent()
 			next := selec.Next()
@@ -128,12 +133,10 @@ var commonmark = []Rule{
 				return nil
 			}
 
-			if !opt.AllowHeaderBreak {
-				content = strings.Replace(content, "\n", " ", -1)
-				content = strings.Replace(content, "\r", " ", -1)
-				content = strings.Replace(content, `#`, `\#`, -1)
-				content = strings.TrimSpace(content)
-			}
+			content = strings.Replace(content, "\n", " ", -1)
+			content = strings.Replace(content, "\r", " ", -1)
+			content = strings.Replace(content, `#`, `\#`, -1)
+			content = strings.TrimSpace(content)
 
 			insideLink := selec.ParentsFiltered("a").Length() > 0
 			if insideLink {
@@ -217,6 +220,11 @@ var commonmark = []Rule{
 			alt := selec.AttrOr("alt", "")
 			alt = strings.Replace(alt, "\n", " ", -1)
 
+			src = opt.GetAbsoluteURL(selec, src, opt.domain)
+
+			alt := selec.AttrOr("alt", "")
+			alt = strings.Replace(alt, "\n", " ", -1)
+
 			text := fmt.Sprintf("![%s](%s)", alt, src)
 			return &text
 		},
@@ -249,6 +257,11 @@ var commonmark = []Rule{
 			// the 'title' or 'aria-label' attribute is used instead.
 			if strings.TrimSpace(content) == "" {
 				content = selec.AttrOr("title", selec.AttrOr("aria-label", ""))
+			}
+
+			// a link without text won't de displayed anyway
+			if content == "" {
+				return AdvancedResult{}, true
 			}
 
 			if opt.LinkStyle == "inlined" {

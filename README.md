@@ -5,7 +5,7 @@
 ![GitHub MIT License](https://img.shields.io/github/license/JohannesKaufmann/html-to-markdown)
 [![GoDoc](https://godoc.org/github.com/JohannesKaufmann/html-to-markdown?status.png)](http://godoc.org/github.com/JohannesKaufmann/html-to-markdown)
 
-![gopher stading on top of a machine that converts a box of html to blocks of markdown](/logo.png)
+![Gopher, the mascot of Golang, is wearing a party hat and holding a balloon. Next to the Gopher is a machine that converts characters associated with HTML to characters associated with Markdown.](/logo_five_years.png)
 
 Convert HTML into Markdown with Go. It is using an [HTML Parser](https://github.com/PuerkitoBio/goquery) to avoid the use of `regexp` as much as possible. That should prevent some [weird cases](https://stackoverflow.com/a/1732454) and allows it to be used for cases where the input is totally unknown.
 
@@ -126,6 +126,67 @@ Determines which elements are to be kept and rendered as HTML.
 ### `func (c *Converter) Remove(tags ...string) *Converter`
 
 Determines which elements are to be removed altogether i.e. converted to an empty string.
+
+## Escaping
+
+Some characters have a special meaning in markdown. For example, the character "\*" can be used for lists, emphasis and dividers. By placing a backlash before that character (e.g. "\\\*") you can "escape" it. Then the character will render as a raw "\*" without the _"markdown meaning"_ applied.
+
+But why is "escaping" even necessary?
+
+<!-- prettier-ignore -->
+```md
+Paragraph 1
+-
+Paragraph 2
+```
+
+The markdown above doesn't seem that problematic. But "Paragraph 1" (with only one hyphen below) will be recognized as a _setext heading_.
+
+```html
+<h2>Paragraph 1</h2>
+<p>Paragraph 2</p>
+```
+
+A well-placed backslash character would prevent that...
+
+<!-- prettier-ignore -->
+```md
+Paragraph 1
+\-
+Paragraph 2
+```
+
+---
+
+How to configure escaping? Depending on the `EscapeMode` option, the markdown output is going to be different.
+
+```go
+opt = &md.Options{
+	EscapeMode: "basic", // default
+}
+```
+
+Lets try it out with this HTML input:
+
+|          |                                                       |
+| -------- | ----------------------------------------------------- |
+| input    | `<p>fake **bold** and real <strong>bold</strong></p>` |
+|          |                                                       |
+|          | **With EscapeMode "basic"**                           |
+| output   | `fake \*\*bold\*\* and real **bold**`                 |
+| rendered | fake \*\*bold\*\* and real **bold**                   |
+|          |                                                       |
+|          | **With EscapeMode "disabled"**                        |
+| output   | `fake **bold** and real **bold**`                     |
+| rendered | fake **bold** and real **bold**                       |
+
+With **basic** escaping, we get some escape characters (the backlash "\\") but it renders correctly.
+
+With escaping **disabled**, the fake and real bold can't be distinguished in the markdown. That means it is both going to render as bold.
+
+---
+
+So now you know the purpose of escaping. However, if you encounter some content where the escaping breaks, you can manually disable it. But please also open an issue!
 
 ## Issues
 
