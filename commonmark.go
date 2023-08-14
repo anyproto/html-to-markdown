@@ -249,10 +249,10 @@ var commonmark = []Rule{
 				content = selec.AttrOr("title", selec.AttrOr("aria-label", ""))
 			}
 
-			// a link without text won't de displayed anyway
-			if content == "" {
-				return AdvancedResult{}, true
-			}
+			//// a link without text won't de displayed anyway
+			//if content == "" {
+			//	return AdvancedResult{}, true
+			//}
 
 			if opt.LinkStyle == "inlined" {
 				md := fmt.Sprintf("[%s](%s%s)", content, href, title)
