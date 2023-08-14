@@ -87,14 +87,9 @@ var commonmark = []Rule{
 			// normal text be indented and thus be a code block.
 			text = multipleSpacesR.ReplaceAllString(text, " ")
 
-			if opt.EscapeMode == "basic" {
-				text = escape.MarkdownCharacters(text)
-			}
-
 			if !opt.DisableEscaping {
 				text = escape.MarkdownCharacters(text)
 			}
-
 			// if its inside a list, trim the spaces to not mess up the indentation
 			parent := selec.Parent()
 			next := selec.Next()
@@ -131,10 +126,12 @@ var commonmark = []Rule{
 				return nil
 			}
 
-			content = strings.Replace(content, "\n", " ", -1)
-			content = strings.Replace(content, "\r", " ", -1)
-			content = strings.Replace(content, `#`, `\#`, -1)
-			content = strings.TrimSpace(content)
+			if !opt.AllowHeaderBreak {
+				content = strings.Replace(content, "\n", " ", -1)
+				content = strings.Replace(content, "\r", " ", -1)
+				content = strings.Replace(content, `#`, `\#`, -1)
+				content = strings.TrimSpace(content)
+			}
 
 			insideLink := selec.ParentsFiltered("a").Length() > 0
 			if insideLink {

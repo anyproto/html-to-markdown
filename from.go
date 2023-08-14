@@ -1,16 +1,18 @@
 // Package md converts html to markdown.
 //
-//  converter := md.NewConverter("", true, nil)
+//	converter := md.NewConverter("", true, nil)
 //
-//  html = `<strong>Important</strong>`
+//	html = `<strong>Important</strong>`
 //
-//  markdown, err := converter.ConvertString(html)
-//  if err != nil {
-//    log.Fatal(err)
-//  }
-//  fmt.Println("md ->", markdown)
+//	markdown, err := converter.ConvertString(html)
+//	if err != nil {
+//	  log.Fatal(err)
+//	}
+//	fmt.Println("md ->", markdown)
+//
 // Or if you are already using goquery:
-//  markdown, err := converter.Convert(selec)
+//
+//	markdown, err := converter.Convert(selec)
 package md
 
 import (
@@ -101,9 +103,9 @@ var (
 )
 
 // NewConverter initializes a new converter and holds all the rules.
-// - `domain` is used for links and images to convert relative urls ("/image.png") to absolute urls.
-// - CommonMark is the default set of rules. Set enableCommonmark to false if you want
-//   to customize everything using AddRules and DONT want to fallback to default rules.
+//   - `domain` is used for links and images to convert relative urls ("/image.png") to absolute urls.
+//   - CommonMark is the default set of rules. Set enableCommonmark to false if you want
+//     to customize everything using AddRules and DONT want to fallback to default rules.
 func NewConverter(domain string, enableCommonmark bool, options *Options) *Converter {
 	conv := &Converter{
 		domain: domain,
@@ -172,9 +174,6 @@ func NewConverter(domain string, enableCommonmark bool, options *Options) *Conve
 	}
 	if options.LinkReferenceStyle == "" {
 		options.LinkReferenceStyle = "full"
-	}
-	if options.EscapeMode == "" {
-		options.EscapeMode = "basic"
 	}
 
 	// for now, store it in the options
