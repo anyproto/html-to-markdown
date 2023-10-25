@@ -8,8 +8,9 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"github.com/JohannesKaufmann/html-to-markdown/escape"
 	"github.com/PuerkitoBio/goquery"
+
+	"github.com/JohannesKaufmann/html-to-markdown/escape"
 )
 
 var multipleSpacesR = regexp.MustCompile(`  +`)
@@ -78,7 +79,7 @@ var commonmark = []Rule{
 		Filter: []string{"#text"},
 		Replacement: func(content string, selec *goquery.Selection, opt *Options) *string {
 			text := selec.Text()
-			if trimmed := strings.TrimSpace(text); trimmed == "" {
+			if trimmed := strings.Trim(text, "\t\v\f\r "); trimmed == "" {
 				return String("")
 			}
 			text = tabR.ReplaceAllString(text, " ")
